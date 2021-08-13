@@ -25,14 +25,17 @@ class DepDict(dict):
 
             if is_system_wide and is_enabled:
                 # Check all paths to make sure they're already
-                # canonicalized
+                # canonicalized and that they exist
                 for path in subkey['paths'].values():
-                    if Path(path).is_absolute() is False:
+                    exists = Path(path).exists()
+                    is_absolute = Path(path).is_absolute()
+
+                    if not is_absolute:
                         err = f"Path: \"{path}\" not found."
                         log.error(err)
                         raise FileNotFoundError(err).with_traceback()
 
-                    if not Path(path).exists():
+                    if not exists:
                         err = f"Path: \"{path}\" doesn't exist."
                         log.error(err)
                         raise FileNotFoundError(err).with_traceback()
@@ -66,8 +69,9 @@ class DepDict(dict):
 
         includes = []
         for subkey in self.values():
-            # For linux compatibility, where headers are
-            # all stored in a system directory
+            # For linux compatibility
+            # check whether headers are stored
+            # in a system directory
             is_system_wide = subkey['system_wide']
 
             # Check 'enabled flag'
@@ -94,13 +98,14 @@ class DepDict(dict):
 
     # Return a all library directories for deps           #
     # --------------------------------------------------- #
-    def get_include_dirs(self, dirs: dict) -> list:
+    def get_library_dirs(self, dirs: dict) -> list:
         log.info('Fetching library directories...')
 
         libs = []
         for subkey in self.values():
-            # For linux compatibility, where headers are
-            # all stored in a system directory
+            # For linux compatibility
+            # check whether libraries are stored
+            # in a system directory
             is_system_wide = subkey['system_wide']
 
             # Check 'enabled' flag
@@ -118,10 +123,6 @@ class DepDict(dict):
                 library_dir = subkey['search_paths']['lib']
 
                 libs.append(f'\"{library_dir}\"')
-
-        # Append main project source and library directories
-        libs.append(f"\"{dirs['include']}\"")
-        libs.append(f"\"{dirs['source']}\"")
 
         return libs
 
