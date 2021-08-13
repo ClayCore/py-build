@@ -1,10 +1,11 @@
 from pathlib import Path
 from utils.logger import log
 
-# Dependency dictionary                   #
-# for managing dependency paths           #
-# ======================================= #
+
 class DepDict(dict):
+    # Dependency dictionary                   #
+    # for managing dependency paths           #
+    # ======================================= #
     def __init__(self, *arg, **kw):
         super().__init__(*arg, **kw)
 
@@ -18,11 +19,11 @@ class DepDict(dict):
 
         for key, subkey in self.items():
             # Check the 'enabled' and 'system-wide' flags
-            enabled = subkey['enabled']
-            system_wide = subkey['system-wide']
-            header_only = subkey['header_only']
+            is_enabled = subkey['enabled']
+            is_system_wide = subkey['system-wide']
+            has_library = subkey['header_only']
 
-            if system_wide and enabled:
+            if is_system_wide and is_enabled:
                 # Check all paths to make sure they're already
                 # canonicalized
                 for path in subkey['paths'].values():
@@ -35,9 +36,9 @@ class DepDict(dict):
                         err = f"Path: \"{path}\" doesn't exist."
                         log.error(err)
                         raise FileNotFoundError(err).with_traceback()
-            
+
             # Resolve all relative paths
-            elif not system_wide and enabled:
+            elif not is_system_wide and is_enabled:
                 for path in subkey['paths'].values():
                     # NOTE: 'key' is the name of the package
                     new_path = dirs['deps'] / key / path
@@ -46,14 +47,14 @@ class DepDict(dict):
                     self[key]['paths'][path] = new_path
 
                 # Resolve library directories
-                if not header_only:
+                if not has_library:
                     new_libs = []
                     for path in subkey['libs']:
                         lib_path = subkey['paths']['lib']
                         new_path = dirs['deps'] / key / lib_path / path
 
                         new_libs.append(new_path)
-                    
+
                     self[key]['libs'] = new_libs
             else:
                 continue
@@ -67,24 +68,24 @@ class DepDict(dict):
         for subkey in self.values():
             # For linux compatibility, where headers are
             # all stored in a system directory
-            system_wide = subkey['system_wide']
+            is_system_wide = subkey['system_wide']
 
             # Check 'enabled flag'
-            enabled = subkey['enabled']
+            is_enabled = subkey['enabled']
 
-            if enabled and not system_wide:
-                # Fetch local include dirs 
+            if is_enabled and not is_system_wide:
+                # Fetch local include dirs
                 # relative to project root
                 include_dir = subkey['paths']['include']
-                
+
                 includes.append(f'\"{include_dir}\"')
-            
-            if enabled and system_wide:
+
+            if is_enabled and is_system_wide:
                 # Fetch system-wide include directories
                 include_dir = subkey['search_paths']['include']
 
                 includes.append(f'\"{include_dir}\"')
-        
+
         # Append main project source and include directories
         includes.append(f"\"{dirs['include']}\"")
         includes.append(f"\"{dirs['source']}\"")
@@ -100,30 +101,30 @@ class DepDict(dict):
         for subkey in self.values():
             # For linux compatibility, where headers are
             # all stored in a system directory
-            system_wide = subkey['system_wide']
+            is_system_wide = subkey['system_wide']
 
             # Check 'enabled' flag
-            enabled = subkey['enabled']
+            is_enabled = subkey['enabled']
 
-            if enabled and not system_wide:
-                # Fetch local library dirs 
+            if is_enabled and not is_system_wide:
+                # Fetch local library dirs
                 # relative to project root
                 library_dir = subkey['paths']['lib']
-                
+
                 libs.append(f'\"{library_dir}\"')
-            
-            if enabled and system_wide:
+
+            if is_enabled and is_system_wide:
                 # Fetch system-wide library directories
                 library_dir = subkey['search_paths']['lib']
 
                 libs.append(f'\"{library_dir}\"')
-        
+
         # Append main project source and library directories
         libs.append(f"\"{dirs['include']}\"")
         libs.append(f"\"{dirs['source']}\"")
 
         return libs
-    
+
     # Prepend '-I' switch to include directories           #
     # ---------------------------------------------------- #
     def add_include_switch(self, dirs: list) -> list:
@@ -148,13 +149,12 @@ class DepDict(dict):
         args = []
         for subkey in self.values():
             # Check the dependency flags
-            enabled = subkey['enabled']
-            library = subkey['header_only']
+            is_enabled = subkey['enabled']
+            has_library = subkey['header_only']
 
-            if enabled and library:
+            if is_enabled and has_library:
                 # Add all arguments from the subkey
                 for arg in subkey['args']:
                     args.append(arg)
-            
-        return args
 
+        return args
