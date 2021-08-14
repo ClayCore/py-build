@@ -67,6 +67,7 @@ class Builder(Config):
 
             # Build the command and split it
             cmd_build_obj = f"{compiler} -c -o \"{obj}\" \"{source}\" {includes} {build_flags}"
+
             cmd_build_obj = shlex.split(cmd_build_obj)
 
             # Run and capture output
@@ -82,7 +83,7 @@ class Builder(Config):
 
                 results.append(True)
             else:
-                log.error('f\"{target} intermediate compile failed\"')
+                log.error(f'\"{target}\" intermediate compile failed')
                 log.error(f"\n{process.stderr.decode('utf-8')}")
 
                 results.append(False)
@@ -132,7 +133,7 @@ class Builder(Config):
                 log.info('Captured output: ')
                 log.info(f"\n{process.stderr.decode('utf-8')}")
         else:
-            log.error('f\"{target} final build failed\"')
+            log.error(f'\"{target}\" final build failed')
             log.error(f"\n{process.stderr.decode('utf-8')}")
 
     # Build source and object files           #

@@ -112,18 +112,22 @@ class DepDict(dict):
             # Check 'enabled' flag
             is_enabled = subkey['enabled']
 
-            if is_enabled and not is_system_wide:
-                # Fetch local library dirs
-                # relative to project root
-                library_dir = subkey['paths']['lib']
+            # Check if its a header only dependency
+            has_library = subkey['header_only']
 
-                libs.append(f'\"{library_dir}\"')
+            if not has_library:
+                if is_enabled and not is_system_wide:
+                    # Fetch local library dirs
+                    # relative to project root
+                    library_dir = subkey['paths']['lib']
 
-            if is_enabled and is_system_wide:
-                # Fetch system-wide library directories
-                library_dir = subkey['search_paths']['lib']
+                    libs.append(f'\"{library_dir}\"')
 
-                libs.append(f'\"{library_dir}\"')
+                if is_enabled and is_system_wide:
+                    # Fetch system-wide library directories
+                    library_dir = subkey['search_paths']['lib']
+
+                    libs.append(f'\"{library_dir}\"')
 
         return libs
 
@@ -154,7 +158,7 @@ class DepDict(dict):
             is_enabled = subkey['enabled']
             has_library = subkey['header_only']
 
-            if is_enabled and has_library:
+            if is_enabled and not has_library:
                 # Add all arguments from the subkey
                 for arg in subkey['args']:
                     args.append(arg)

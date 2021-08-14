@@ -163,14 +163,14 @@ class Config(object):
         self.deps.resolve(self.dirs)
 
         # Fetch include directories
-        include_dirs = self.deps.get_include_dirs()
-        include_dirs = self.deps.add_include_switch(self.dirs)
+        include_dirs = self.deps.get_include_dirs(self.dirs)
+        include_dirs = self.deps.add_include_switch(include_dirs)
 
         self.include_dirs = include_dirs
 
         # Fetch library directories
-        library_dirs = self.deps.get_library_dirs()
-        library_dirs = self.deps.add_library_switch(self.dirs)
+        library_dirs = self.deps.get_library_dirs(self.dirs)
+        library_dirs = self.deps.add_library_switch(library_dirs)
 
         self.library_dirs = library_dirs
 
