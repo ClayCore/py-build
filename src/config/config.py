@@ -254,7 +254,7 @@ class Config(object):
         is_dict = isinstance(src, dict)
         is_list = isinstance(src, list)
 
-        for k, v in (src.items if is_dict else enumerate(src) if is_list else []):
+        for k, v in (src.items() if is_dict else enumerate(src) if is_list else []):
             if k == key:
                 yield v
             elif isinstance(v, (dict, list)):
