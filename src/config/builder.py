@@ -1,5 +1,5 @@
-from ..utils.file import delete_dir, get_file_list
-from ..utils.logger import log
+from utils.file import delete_dir, get_file_list
+from utils.logger import log
 from .config import Config
 from hashlib import md5
 from pathlib import Path

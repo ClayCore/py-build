@@ -1,4 +1,4 @@
-from ..utils.logger import log
+from utils.logger import log
 from .depdict import DepDict
 from flatdict import FlatDict  # type: ignore
 from pathlib import Path

@@ -29,8 +29,8 @@ import sys
 from docopt import docopt  # type: ignore
 import colorama  # type: ignore
 
-from .utils.logger import log
-from .config.builder import Builder
+from utils.logger import log
+from config.builder import Builder
 
 
 def main():
