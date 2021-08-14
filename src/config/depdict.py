@@ -21,7 +21,7 @@ class DepDict(dict):
         for key, subkey in self.items():
             # Check the 'enabled' and 'system-wide' flags
             is_enabled = subkey['enabled']
-            is_system_wide = subkey['system-wide']
+            is_system_wide = subkey['system_wide']
             has_library = subkey['header_only']
 
             if is_system_wide and is_enabled:
