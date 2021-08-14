@@ -8,7 +8,6 @@ Usage:
     py-build.py [--help]
     py-build.py clean <config> 
     py-build.py build <config> <profile>
-    py-build.py run <config> <profile>
 
 Options:
     --help              Shows this screen.
@@ -21,20 +20,23 @@ Input:
 Subcommands:
     clean               Cleans build and output directories.
     build               Builds the entire project.
-    run                 Builds and runs the application.
 '''
 
 from pathlib import Path
 import os
 import sys
 
-from docopt import docopt # type: ignore
-import colorama # type: ignore
+from docopt import docopt  # type: ignore
+import colorama  # type: ignore
 
-from utils.logger import log
-from utils.types import Builder
+from .utils.logger import log
+from .types.builder import Builder
+
 
 def main():
+    # Main entry point           #
+    # -------------------------- #
+
     # Clear the screen
     if os.name == 'posix':
         os.system('clear')
@@ -44,8 +46,8 @@ def main():
     # Initialize colorama for colored logging
     colorama.init()
 
-    # Parsing launch parameters
-    # =========================
+    # Launch arguments parsing           #
+    # ---------------------------------- #
 
     # Add `--help` if no arguments were supplied
     if len(sys.argv) == 1:
@@ -66,10 +68,11 @@ def main():
 
         # Selected target profile
         target = args['<profile>']
-        builder.set_target(target)
+        builder.set_active_profile(target)
 
-        # Entry point
-        # =========================
+        # Initialize the builder           #
+        # -------------------------------- #
+
         log.info('Initializing build system...')
 
         if args['clean'] == True:
@@ -79,12 +82,7 @@ def main():
         if args['build'] == True:
             # Build the project
             log.info('Starting build...')
-            builder.prepare_dirs()
-            builder.build()
-        if args['run'] == True:
-            # Build & run
-            log.info('Starting build & run...')
-            builder.prepare_dirs()
+            builder.prepare_build_dirs()
             builder.build()
 
 
