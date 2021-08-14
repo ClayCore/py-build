@@ -3,6 +3,7 @@ from utils.logger import log
 
 
 class DepDict(dict):
+    # ======================================= #
     # Dependency dictionary                   #
     # for managing dependency paths           #
     # ======================================= #
