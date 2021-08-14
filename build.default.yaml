@@ -70,6 +70,12 @@ project:
       # if disabled, then everything is ignored
       enabled: true
 
+      # if true, skips the lookup for library directories
+      header_only: false
+
+      # Used for linux
+      system_wide: false
+
       # Paths relative to `dirs:deps`
       paths:
         # Include/header directory
@@ -79,9 +85,11 @@ project:
         # can be omitted `header_only` is true
         lib: 'lib'
 
-      # if true, skips the lookup for library directories
-      # if false, the `libs` and `args` keys can be omitted
-      header_only: false
+      # Search paths used for system-wide installations
+      search_paths:
+        include: '/usr/include/example'
+
+        lib: '/usr/lib/example'
 
       # Names of libraries that are supposed to be included in the compilation
       libs:
