@@ -1,13 +1,13 @@
-from pathlib import Path
+from ..utils.logger import log
+from .depdict import DepDict
 from flatdict import FlatDict  # type: ignore
+from pathlib import Path
 from typing import Tuple, Any
 import yaml  # type: ignore
 
-from ..utils.logger import log
-from .depdict import DepDict
-
 
 class Config(object):
+    # ======================================== #
     # Base config file class                   #
     # ======================================== #
     def __init__(self, path: Path):
