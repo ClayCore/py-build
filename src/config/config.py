@@ -145,7 +145,7 @@ class Config(object):
 
                     # Get header files
                     if key == 'include':
-                        new_path = self.dirs['inclue'] / p
+                        new_path = self.dirs['include'] / p
                         temp_paths.append(new_path)
 
                 # Put all found files back into the dict
