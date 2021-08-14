@@ -30,7 +30,7 @@ from docopt import docopt  # type: ignore
 import colorama  # type: ignore
 
 from .utils.logger import log
-from .types.builder import Builder
+from .config.builder import Builder
 
 
 def main():
