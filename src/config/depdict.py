@@ -27,7 +27,7 @@ class DepDict(dict):
             if is_system_wide and is_enabled:
                 # Check all paths to make sure they're already
                 # canonicalized and that they exist
-                for path in subkey['paths'].values():
+                for path in subkey['search_paths'].values():
                     exists = Path(path).exists()
                     is_absolute = Path(path).is_absolute()
 
